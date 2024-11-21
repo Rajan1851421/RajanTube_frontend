@@ -1,12 +1,12 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Signup from './components/signup';
-import Login from './components/Login';
-import Dashboard from './components/dashboard/Dashboard';
-import UploadVideo from './components/dashboard/UploadVideo'
-import MyVideos from './components/dashboard/MyVideos';
-import Home from './components/dashboard/Home'
-import History from './components/dashboard/History';
+import Signup from './components/signup.jsx';
+import Login from './components/Login.jsx';
+import Dashboard from './components/dashboard/Dashboard.jsx';
+import UploadVideo from './components/dashboard/UploadVideo.jsx'
+import MyVideos from './components/dashboard/MyVideos.jsx';
+import Home from './components/dashboard/Home.jsx'
+import History from './components/dashboard/History.jsx';
 
 
 function App() {
