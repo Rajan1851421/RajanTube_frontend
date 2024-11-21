@@ -10,7 +10,7 @@ import { LuHistory } from "react-icons/lu";
 
 
 function Dashboard() {
-  const [isSidebarVisible, setSidebarVisible] = useState(false); // Sidebar hidden by default
+  const [isSidebarVisible, setSidebarVisible] = useState(true); // Sidebar hidden by default
   const [activeItem, setActiveItem] = useState("Home");
   const navigate = useNavigate();
 
@@ -25,7 +25,9 @@ function Dashboard() {
 
   const handleSignOut = () => {
     localStorage.removeItem("L_token");
-    window.location.href = "/dashboard/login";
+    localStorage.removeItem('channelName')
+    navigate('/')
+    window.location.reload()
   };
 
   const menuItems = [
