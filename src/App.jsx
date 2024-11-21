@@ -11,7 +11,7 @@ import History from './components/dashboard/History.jsx';
 
 function App() {
   const myRoutes = createBrowserRouter([
-    { path: '/', element: <Login /> },
+    { path: '/', element: <Dashboard /> },
     { path: '/upload', element: <UploadVideo /> },
     {
       path: '/dashboard', element: <Dashboard />, children: [
