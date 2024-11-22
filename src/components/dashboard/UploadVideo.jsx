@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Login from '../Login';
 
 function VideoUpload() {
     const [token, setToken] = useState(null);
@@ -12,13 +13,20 @@ function VideoUpload() {
     const [thumbnailUrl, setThumbnailUrl] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    if (!localStorage.getItem('L_token')) {
+        return <>
+            <Login/>
+        </>
+
+    }
+        useEffect(() => {
+            const storedToken = localStorage.getItem('L_token');
+            setToken(storedToken);
 
 
-    // Fetch token from localStorage on component mount
-    useEffect(() => {
-        const storedToken = localStorage.getItem('L_token');
-        setToken(storedToken);
-    }, []);
+        }, []);
+        
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();

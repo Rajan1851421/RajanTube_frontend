@@ -34,7 +34,7 @@ function History() {
 
     return (
         <div className="bg-black min-h-screen w-full p-4">
-            <h1 className='text-gray-100 my-4 text-xl '>Resent View</h1>
+            <h1 className='text-gray-100 my-4 text-xl border-b border-gray-900 pb-2 '>Recent Hostory </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {matchedVideos.length > 0 ? (
                     matchedVideos.map((video) => (

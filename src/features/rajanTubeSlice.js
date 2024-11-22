@@ -3,12 +3,29 @@ import axios from "axios";
 
 // Thunk to fetch all videos
 export const getAllVideos = createAsyncThunk(
-  "getAllVideos", // Namespace the action properly
+  "getAllVideos", 
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `https://rajantube-1.onrender.com/video`
       );
+      return response.data; // Returning data as-is
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+// create for ALL users
+
+export const getAllUsers = createAsyncThunk(
+  "getAllUsers", 
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `https://rajantube-1.onrender.com/user`
+      );
+      console.log("dhf",response.data)
       return response.data; // Returning data as-is
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -61,13 +78,16 @@ export const deleteVideo = createAsyncThunk("deleteVideo",async(id,{rejectWithVa
 const videoDetailsSlice = createSlice({
   name: "videoDetails",
   initialState: {
+    allUsers:[],
     allVideos: [],
     history: [],
     ownerVideo: [],
     loading: false,
     error: null,
+    side:false
   },
   reducers: {
+   
     clearHistory: (state) => {
       state.history = [];
     },
@@ -106,9 +126,22 @@ const videoDetailsSlice = createSlice({
       .addCase(ownAllVideos.rejected, (state, action) => {
         state.loading = false;
         state.error = "Failed";
-      });
+      })
+      .addCase(getAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null; // Clear error when loading starts
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUsers = action.payload.Allusers || [];
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
   },
 });
 
-export const { clearHistory, addToHistory } = videoDetailsSlice.actions; // Export actions
+export const { clearHistory, addToHistory  } = videoDetailsSlice.actions; // Export actions
 export default videoDetailsSlice.reducer; // Export reducer

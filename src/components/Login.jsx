@@ -35,7 +35,7 @@ function Login() {
       localStorage.setItem("channelName",response.data.user.channelName)
       localStorage.setItem("logoUrl",response.data.user.logoUrl)
       toast.success(response.data.message)   
-      navigate('/dashboard/my-videos');
+      navigate('/');
     } catch (error) {
       console.error('Error:', error.response?.data || error.message);
       toast.error(error.response?.data?.message )
