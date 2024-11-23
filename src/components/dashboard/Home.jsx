@@ -4,9 +4,7 @@ import moment from "moment";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers, getAllVideos } from "../../features/rajanTubeSlice";
-import { addToHistory } from "../../features/rajanTubeSlice";
 import { Vortex } from 'react-loader-spinner'
-import Login from "../Login";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -22,25 +20,14 @@ function Home() {
     window.scrollTo(0, 0);
     dispatch(getAllVideos());
     dispatch(getAllUsers())
-
-    // Simulate API call delay and set loading to false once data is fetched
     const timer = setTimeout(() => {
-      setLoading(false); // Set loading to false after data is fetched
-    }, 2000); // You can adjust the timeout as per the API response time
+      setLoading(false);
+    }, 2000); 
 
-    return () => clearTimeout(timer); // Cleanup timeout on component unmount
-  }, [dispatch, liked]);
+    return () => clearTimeout(timer); 
+  }, [dispatch]);
 
-  // const handleVideoClick = (videoId) => {
-  //   console.log("id", videoId);
-  //   dispatch(addToHistory(videoId));
-  //   if (currentVideo && currentVideo !== videoId) {
-  //     const prevVideo = document.getElementById(currentVideo);
-  //     if (prevVideo) prevVideo.pause();
-  //   }
-  //   setCurrentVideo(videoId);
-  //   dispatch(addToHistory(videoId));
-  // };
+  
 
   const handleVideoClick=(id)=>{
     navigate(`/video-play/${id}`);

@@ -80,6 +80,16 @@ function Sidebar() {
                     >
                         <BiLike /> Watch Later
                     </Link>
+                    <div className='border-b border-gray-900 w-full '></div>
+                    <Link
+                        to="/subcription"
+                        onClick={() => handleMenuClick("History")}
+                        className={`flex items-center justify-start gap-3 py-2 px-4 rounded cursor-pointer ${
+                            activeItem === "Watch Later" ? "bg-[#646060]" : "hover:bg-[#666464]"
+                        }`}
+                    >
+                         Subscription
+                    </Link>
                 </div>
             </div>
         </div>

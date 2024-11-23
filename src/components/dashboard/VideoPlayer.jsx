@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getAllUsers, addToHistory } from '../../features/rajanTubeSlice'; // Import addToHistory
+import { getAllUsers, addToHistory, viewAPIcall, getAllVideos, subscribeAPIcall } from '../../features/rajanTubeSlice'; // Import addToHistory
 import { FaThumbsUp, FaThumbsDown, FaShare } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from 'axios';
@@ -10,10 +10,10 @@ import moment from "moment";
 function VideoPlayer() {
     const { id } = useParams();
     const { allVideos, allUsers } = useSelector((state) => state.rajanTube);
-    const [singleVideo,setSingleVide] = useState([])
+    const [singleVideo, setSingleVide] = useState([])
     const dispatch = useDispatch();
     const [liked, setLiked] = useState('');
-    
+
 
     const likedByUsers = singleVideo?.likedby?.map((userId) =>
         allUsers?.find((user) => user._id === userId)
@@ -23,11 +23,12 @@ function VideoPlayer() {
         const singleVideo = allVideos?.data?.find((video) => video._id === id);
         setSingleVide(singleVideo)
         dispatch(getAllUsers());
+        dispatch(getAllVideos())
     }, [dispatch, liked]);
 
     const handleLike = (id) => {
         if (!localStorage.getItem('L_token')) {
-            navigate('/login');
+            alert("please login")
         }
         setLiked('');
         axios
@@ -52,7 +53,7 @@ function VideoPlayer() {
 
     const handledisLike = (id) => {
         if (!localStorage.getItem('L_token')) {
-            navigate('/login');
+            alert("please login")
         }
         axios
             .put(
@@ -74,22 +75,35 @@ function VideoPlayer() {
             });
     };
 
-    const handlePlay = () => {       
+    const handlePlay = (id) => {
         dispatch(addToHistory(singleVideo._id));
+        setTimeout(() => {
+            dispatch(viewAPIcall(id))
+        }, 5000)
     };
     const handlePlayVideo = (id) => {
         const clickedVideo = allVideos?.data?.find((video) => video._id === id);
         if (clickedVideo) {
             setSingleVide(clickedVideo); // Update the current video
-            console.log("Loaded video:", clickedVideo);
+            setTimeout(() => {
+                dispatch(viewAPIcall(id))
+            }, 5000)
         } else {
             console.error("Video not found!");
         }
     };
+    const handleSubscribe = (id) => {
+        if (!localStorage.getItem('L_token')) {
+            alert("please login")
+        }
+        dispatch(subscribeAPIcall(id))
+        console.log("Subscribe:",id)
+    }
 
     return (
         <div className="bg-gray-950 flex md:flex-row flex-col justify-center h-screen overflow-y-auto no-scrollbar">
             {/* Video Player and Details Section */}
+            onPlay={() => handlePlay(singleVideo._id)}
             <div className="w-full md:w-[60%] p-4 flex flex-col h-screen overflow-y-auto no-scrollbar">
                 {singleVideo ? (
                     <>
@@ -99,18 +113,18 @@ function VideoPlayer() {
                             controls
                             autoPlay
                             className="rounded-lg shadow-md border w-full border-gray-900"
-                            style={{ height: '300px' }} /* Adjusted for smaller screens */
-                            onPlay={handlePlay} // Trigger action on play
+                            style={{ height: '420px' }} /* Adjusted for smaller screens */
+                            onPlay={() => handlePlay(singleVideo._id)} // Trigger action on play
                         />
                         <h2 className="text-lg md:text-2xl text-gray-100 font-bold mt-3">
                             {singleVideo.title}
                         </h2>
                         {/* Actions Section */}
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-2 gap-2">
                             <p className="text-gray-400">{singleVideo.category}</p>
                             <div className="flex flex-wrap gap-2 md:gap-4">
                                 <button className="rounded-2xl bg-gray-900 px-3 py-1 text-white">Join</button>
-                                <button className="rounded-2xl bg-gray-200 px-3 py-1 text-gray-600">Subscribe</button>
+                                <button onClick={() => handleSubscribe(singleVideo.user_id)} className="rounded-2xl bg-gray-200 px-3 py-1 text-gray-600">Subscribe</button>
                                 <div className="bg-gray-900 flex px-3 py-2 rounded-2xl">
                                     <p className="text-gray-500 flex gap-2 items-center border-r-2 pr-3">
                                         {singleVideo.likes}
@@ -174,7 +188,7 @@ function VideoPlayer() {
             </div>
 
             {/* Recommended Videos Section */}
-            <div className="w-full md:w-[40%] p-4 text-white h-screen overflow-y-auto no-scrollbar">
+            <div className=" justify-center md:w-[40%] p-4 text-white h-screen overflow-y-auto no-scrollbar">
                 <h3 className="text-lg md:text-xl font-bold mb-4">Recommended Videos</h3>
                 <div className="space-y-4">
                     {allVideos?.data?.map((ele, index) => (
@@ -185,8 +199,8 @@ function VideoPlayer() {
                             <video
                                 src={ele.videoUrl}
                                 alt={ele.title}
-                                className="w-full md:w-32 md:h-20 rounded-md object-cover"
-                                onClick={()=>handlePlayVideo(ele._id)}
+                                className="w-1/2 h-20 md:w-32 md:h-20 rounded-md object-cover"
+                                onClick={() => handlePlayVideo(ele._id)}
                             />
                             <div className="flex-1">
                                 <p className="text-md font-semibold text-gray-50 truncate">{ele.title}</p>

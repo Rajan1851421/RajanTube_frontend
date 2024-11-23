@@ -7,6 +7,7 @@ import Upload from '../dashboard/UploadVideo'
 import History from '../dashboard/History'
 import MyVideos from '../dashboard/MyVideos'
 import VideoPlayer from '../dashboard/VideoPlayer'
+import Subscription from '../dashboard/Subscription'
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
             <Route path = '/history' element={<History/>}/>
             <Route path='/my-videos' element={<MyVideos/>}/>
             <Route path='/video-play/:id' element={<VideoPlayer/>}/>
+            <Route path='/subcription' element={<Subscription/>}/>
         </Routes>
     </div>
   )
