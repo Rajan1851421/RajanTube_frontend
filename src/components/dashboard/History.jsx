@@ -3,13 +3,14 @@ import moment from "moment";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addToHistory } from "../../features/rajanTubeSlice";
+import { useNavigate } from "react-router-dom";
 
 function History() {
     const { history, allVideos } = useSelector((state) => state.rajanTube);
-    const [matchedVideos, setMatchedVideos] = useState([]);
-    const [isPlaying, setIsPlaying] = useState(null);
+    const [matchedVideos, setMatchedVideos] = useState([]);   
     const videoRefs = useRef({});
     const [currentVideo, setCurrentVideo] = useState(null); // Track the currently playing video
+    const navigate= useNavigate()
 
     useEffect(() => {
         if (history.length > 0 && allVideos.data) {
@@ -22,14 +23,9 @@ function History() {
     }, [history, allVideos]);
 
     const handleVideoClick = (videoId) => {
-        // Pause the previously playing video
-        console.log("id", videoId);
-        if (currentVideo && currentVideo !== videoId) {
-            const prevVideo = document.getElementById(currentVideo);
-            if (prevVideo) prevVideo.pause();
-        }
-        setCurrentVideo(videoId); // Update the currently playing video
-        dispatch(addToHistory(videoId)); // Optionally add to history again when clicked
+        navigate(`/video-play/${videoId}`);
+        
+        
     };
 
     return (

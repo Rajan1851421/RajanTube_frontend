@@ -24,7 +24,7 @@ function Sidebar() {
     };
 
     return (
-        <div className='bg-black text-white h-screen'>
+        <div className='bg-black text-white h-screen overflow-y-auto no-scrollbar'>
             <div className=''>
                 {/* Menu Items */}
                 <div className="mx-4 py-2 flex flex-col items-start gap-2 justify-star border-b-[1px] border-gray-900">

@@ -16,12 +16,12 @@ function LayOutWrapper() {
 
     return (
         <>
-            <div className="flex w-full relative">
+            <div className="flex flex-row h-screen">
                 {/* Sidebar */}
                 {side && (
                     <div
-                        className="absolute z-10 w-[80%] bg-gray-100 md:static md:w-[20%]"
-                        onClick={(e) => e.stopPropagation()} // Prevent closing sidebar when clicking inside it
+                        className="  w-[80%] bg-gray-100 md:w-[20%] overflow-y-auto h-screen"
+                        // onClick={(e) => e.stopPropagation()} // Prevent closing sidebar when clicking inside it
                     >
                         <Sidebar />
                     </div>

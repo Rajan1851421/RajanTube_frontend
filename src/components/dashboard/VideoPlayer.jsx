@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getAllUsers } from '../../features/rajanTubeSlice';
+import { getAllUsers, addToHistory } from '../../features/rajanTubeSlice'; // Import addToHistory
 import { FaThumbsUp, FaThumbsDown, FaShare } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from 'axios';
@@ -10,23 +10,26 @@ import moment from "moment";
 function VideoPlayer() {
     const { id } = useParams();
     const { allVideos, allUsers } = useSelector((state) => state.rajanTube);
+    const [singleVideo,setSingleVide] = useState([])
     const dispatch = useDispatch();
-    const [liked, setLiked] = useState('')
-    const singleVideo = allVideos?.data?.find((video) => video._id === id);
+    const [liked, setLiked] = useState('');
+    
 
     const likedByUsers = singleVideo?.likedby?.map((userId) =>
         allUsers?.find((user) => user._id === userId)
     );
 
     useEffect(() => {
+        const singleVideo = allVideos?.data?.find((video) => video._id === id);
+        setSingleVide(singleVideo)
         dispatch(getAllUsers());
     }, [dispatch, liked]);
 
     const handleLike = (id) => {
         if (!localStorage.getItem('L_token')) {
-            navigate('/login')
+            navigate('/login');
         }
-        setLiked("")
+        setLiked('');
         axios
             .put(
                 `https://rajantube-1.onrender.com/video/like/${id}`,
@@ -39,20 +42,17 @@ function VideoPlayer() {
                 }
             )
             .then((response) => {
-                console.log(response);
-                setLiked(response.data.message)
-                toast.success(response.data.message)
+                setLiked(response.data.message);
+                toast.success(response.data.message);
             })
             .catch((error) => {
                 console.error("Error liking video:", error);
             });
-
-
     };
 
     const handledisLike = (id) => {
         if (!localStorage.getItem('L_token')) {
-            navigate('/login')
+            navigate('/login');
         }
         axios
             .put(
@@ -66,15 +66,26 @@ function VideoPlayer() {
                 }
             )
             .then((response) => {
-                setLiked(response.data.message)
-                toast.success(response.data.message)
+                setLiked(response.data.message);
+                toast.success(response.data.message);
             })
             .catch((error) => {
-                console.error("Error liking video:", error);
+                console.error("Error disliking video:", error);
             });
+    };
 
-
-    }
+    const handlePlay = () => {       
+        dispatch(addToHistory(singleVideo._id));
+    };
+    const handlePlayVideo = (id) => {
+        const clickedVideo = allVideos?.data?.find((video) => video._id === id);
+        if (clickedVideo) {
+            setSingleVide(clickedVideo); // Update the current video
+            console.log("Loaded video:", clickedVideo);
+        } else {
+            console.error("Video not found!");
+        }
+    };
 
     return (
         <div className="bg-gray-950 flex md:flex-row flex-col justify-center h-screen overflow-y-auto no-scrollbar">
@@ -86,13 +97,14 @@ function VideoPlayer() {
                         <video
                             src={singleVideo.videoUrl}
                             controls
+                            autoPlay
                             className="rounded-lg shadow-md border w-full border-gray-900"
-                            style={{ height: '240px' }} /* Adjusted for smaller screens */
+                            style={{ height: '300px' }} /* Adjusted for smaller screens */
+                            onPlay={handlePlay} // Trigger action on play
                         />
                         <h2 className="text-lg md:text-2xl text-gray-100 font-bold mt-3">
-                            {singleVideo.title.slice(0, 50)}
+                            {singleVideo.title}
                         </h2>
-
                         {/* Actions Section */}
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
                             <p className="text-gray-400">{singleVideo.category}</p>
@@ -123,7 +135,6 @@ function VideoPlayer() {
                                 </button>
                             </div>
                         </div>
-
                         {/* Description Section */}
                         <div className="bg-gray-800 text-gray-300 p-4 rounded-md mt-4">
                             <div className="flex flex-wrap justify-start gap-3 items-center mb-2">
@@ -132,7 +143,6 @@ function VideoPlayer() {
                             </div>
                             <p>{singleVideo.description || "No description available."}</p>
                         </div>
-
                         {/* Liked By Users Section */}
                         <h3 className="text-md md:text-lg text-gray-100 mt-6">Liked By:</h3>
                         {likedByUsers?.length > 0 ? (
@@ -163,7 +173,6 @@ function VideoPlayer() {
                 )}
             </div>
 
-
             {/* Recommended Videos Section */}
             <div className="w-full md:w-[40%] p-4 text-white h-screen overflow-y-auto no-scrollbar">
                 <h3 className="text-lg md:text-xl font-bold mb-4">Recommended Videos</h3>
@@ -173,10 +182,11 @@ function VideoPlayer() {
                             key={index}
                             className="bg-gray-800 p-3 rounded-lg flex flex-col md:flex-row items-start gap-3"
                         >
-                            <img
-                                src={ele.thumbnailUrl}
+                            <video
+                                src={ele.videoUrl}
                                 alt={ele.title}
                                 className="w-full md:w-32 md:h-20 rounded-md object-cover"
+                                onClick={()=>handlePlayVideo(ele._id)}
                             />
                             <div className="flex-1">
                                 <p className="text-md font-semibold text-gray-50 truncate">{ele.title}</p>
@@ -190,7 +200,6 @@ function VideoPlayer() {
                     ))}
                 </div>
             </div>
-
         </div>
     );
 }
