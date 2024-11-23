@@ -25,7 +25,7 @@ export const getAllUsers = createAsyncThunk(
       const response = await axios.get(
         `https://rajantube-1.onrender.com/user`
       );
-      console.log("dhf",response.data)
+      
       return response.data; // Returning data as-is
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

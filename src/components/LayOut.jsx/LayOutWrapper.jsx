@@ -28,7 +28,7 @@ function LayOutWrapper() {
                 )}
                 {/* Main Area */}
                 <div
-                    className={`w-full ${side ? 'md:w-[80%]' : 'md:w-full'} h-screen overflow-y-auto `}
+                    className={`w-full ${side ? 'md:w-[80%]' : 'md:w-full'} h-screen overflow-y-auto no-scrollbar `}
                     onClick={closeSidebar} // Close sidebar when clicking outside
                 >
                     <div className='border border-gray-900 shadow-md'>
