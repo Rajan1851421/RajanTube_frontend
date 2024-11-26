@@ -8,6 +8,7 @@ import History from '../dashboard/History'
 import MyVideos from '../dashboard/MyVideos'
 import VideoPlayer from '../dashboard/VideoPlayer'
 import Subscription from '../dashboard/Subscription'
+import Check from '../FireWorks'
 
 function Router() {
   return (
@@ -21,6 +22,7 @@ function Router() {
             <Route path='/my-videos' element={<MyVideos/>}/>
             <Route path='/video-play/:id' element={<VideoPlayer/>}/>
             <Route path='/subcription' element={<Subscription/>}/>
+            <Route path='/check' element={<Check/>}/>
         </Routes>
     </div>
   )

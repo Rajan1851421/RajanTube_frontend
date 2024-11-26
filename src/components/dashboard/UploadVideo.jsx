@@ -14,31 +14,28 @@ function VideoUpload() {
     const [loading, setLoading] = useState(false);
 
     if (!localStorage.getItem('L_token')) {
-        return <>
-            <Login/>
-        </>
-
+        return <Login />;
     }
-        useEffect(() => {
-            const storedToken = localStorage.getItem('L_token');
-            setToken(storedToken);
 
+    useEffect(() => {
+        const storedToken = localStorage.getItem('L_token');
+        setToken(storedToken);
+    }, []);
 
-        }, []);
-        
-    
+   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!token) {
-            toast.error("invalid Token")
+            toast.error('Invalid token');
             return;
         }
         if (!video || !thumbnailUrl) {
-            toast.error("Choose video and their thimbnail")
+            toast.error('Please choose a video and thumbnail');
             return;
         }
+
         setLoading(true);
         const uploadData = new FormData();
         uploadData.append('title', title);
@@ -61,14 +58,19 @@ function VideoUpload() {
             );
             setLoading(false);
             if (response) {
-                toast.success('Video uploaded successfully!')
-            }
-            else {
-                toast.error('Failed..')
+                toast.success('Video uploaded successfully!');
+                setTitle('');
+                setTags('');
+                setDescription('');
+                setCategory('');
+                setVideo(null);
+                setThumbnailUrl(null);
+            } else {
+                toast.error('Upload failed.');
             }
         } catch (err) {
             setLoading(false);
-            toast.error('An error occurred while uploading the video.')
+            toast.error('An error occurred while uploading the video.');
         }
     };
 
@@ -76,7 +78,7 @@ function VideoUpload() {
         <div className="w-full h-auto p-8 bg-gray-900 flex justify-center items-center">
             <form
                 onSubmit={handleSubmit}
-                className="w-11/12 md:w-1/2  p-6 rounded-md space-y-4"
+                className="w-11/12 md:w-1/2 p-6 rounded-md space-y-4"
                 encType="multipart/form-data"
             >
                 <h3 className="text-white text-xl font-bold mb-4">Upload Video</h3>
@@ -114,7 +116,9 @@ function VideoUpload() {
                         required
                         className="w-full px-3 py-2 rounded-md bg-gray-50 text-gray-900 outline-none focus:ring-2 focus:ring-red-500"
                     >
-                        <option value="" disabled>Select Category</option>
+                        <option value="" disabled>
+                            Select Category
+                        </option>
                         <option value="Education">Education</option>
                         <option value="Entertainment">Entertainment</option>
                         <option value="Music">Music</option>
@@ -123,7 +127,6 @@ function VideoUpload() {
                         <option value="Others">Others</option>
                     </select>
                 </div>
-
 
                 {/* Tags */}
                 <div>
@@ -167,8 +170,8 @@ function VideoUpload() {
                     type="submit"
                     disabled={loading}
                     className={`w-full py-2 font-bold rounded-md transition ${loading
-                        ? 'bg-gray-500 text-gray-300'
-                        : 'bg-red-600 text-white hover:bg-red-700'
+                            ? 'bg-gray-500 text-gray-300'
+                            : 'bg-red-600 text-white hover:bg-red-700'
                         }`}
                 >
                     {loading ? 'Uploading...' : 'Upload Video'}

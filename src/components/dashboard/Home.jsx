@@ -3,41 +3,37 @@ import axios from "axios";
 import moment from "moment";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, getAllVideos } from "../../features/rajanTubeSlice";
+import { getAllVideos, getAllUsers } from "../../features/rajanTubeSlice";
 import { Vortex } from 'react-loader-spinner'
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Confetti from "react-confetti";
 
 function Home() {
   const [currentVideo, setCurrentVideo] = useState(null); // Track the currently playing video
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [isConfettiActive, setIsConfettiActive] = useState(false);
   const dispatch = useDispatch();
-  const [liked, setLiked] = useState('')
-  const { allVideos } = useSelector((state) => state.rajanTube);
-  const navigate = useNavigate()
+  const [liked, setLiked] = useState('');
+  const { allVideos, loading } = useSelector((state) => state.rajanTube);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(getAllVideos());
-    dispatch(getAllUsers())
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000); 
-
-    return () => clearTimeout(timer); 
+    dispatch(getAllUsers());
   }, [dispatch]);
 
-  
-
-  const handleVideoClick=(id)=>{
+  const handleVideoClick = (id) => {
     navigate(`/video-play/${id}`);
   }
 
   const handleLike = (id) => {
-    if(!localStorage.getItem('L_token')){
-      navigate('/login')
+    if (!localStorage.getItem('L_token')) {
+      navigate('/login');
+      return;
     }
-    setLiked("")    
+
+    setLiked("");    
     axios
       .put(
         `https://rajantube-1.onrender.com/video/like/${id}`,
@@ -51,20 +47,27 @@ function Home() {
       )
       .then((response) => {
         console.log(response);
-        setLiked(response.data.message)
-        toast.success(response.data.message)
+        setLiked(response.data.message);
+        setIsConfettiActive(true);
+
+        // Update the liked video count in the local state
+        dispatch(getAllVideos()); // Refresh the list of videos to reflect the updated like count
+
+        setTimeout(() => {
+          setIsConfettiActive(false);
+        }, 5000);
       })
       .catch((error) => {
         console.error("Error liking video:", error);
       });
-
-    
   };
 
-  const handledisLike =(id)=>{
-    if(!localStorage.getItem('L_token')){
-      navigate('/login')
+  const handleDislike = (id) => {
+    if (!localStorage.getItem('L_token')) {
+      navigate('/login');
+      return;
     }
+
     axios
       .put(
         `https://rajantube-1.onrender.com/video/dislike/${id}`,
@@ -76,20 +79,21 @@ function Home() {
           },
         }
       )
-      .then((response) => {        
-        setLiked(response.data.message)
-        toast.success(response.data.message)
+      .then((response) => {
+        setLiked(response.data.message);
+        toast.success(response.data.message);
+
+        // Update the disliked video count in the local state
+        dispatch(getAllVideos()); // Refresh the list of videos to reflect the updated dislike count
       })
       .catch((error) => {
-        console.error("Error liking video:", error);
+        console.error("Error disliking video:", error);
       });
-
-   
   }
-
 
   return (
     <div className="bg-black min-h-screen w-full">
+      {isConfettiActive && <Confetti />}
       {/* Loading text */}
       {loading ? (
         <div className="flex justify-center items-center h-full absolute inset-0 bg-opacity-50 bg-black text-white text-2xl">
@@ -151,7 +155,7 @@ function Home() {
                     <div className="flex gap-2">
                       <p className="text-gray-500 text-xs">{video.views} views</p>
                       <div className="bg-gray-700 flex px-2 py-1 rounded-xl">
-                        <p className="text-gray-500 text-xs flex flex-row items-center gap-2 border-r-2 px-2 ">
+                        <p className="text-gray-500 text-xs flex flex-row items-center gap-2 border-r-2 px-2">
                           {video.likes}
                           <FaThumbsUp
                             onClick={() => handleLike(video._id)}
@@ -162,7 +166,7 @@ function Home() {
                         </p>
                         <p className="text-gray-500 text-xs flex flex-row items-center gap-2 px-2 ">
                           <FaThumbsDown
-                            onClick={() => handledisLike(video._id)}
+                            onClick={() => handleDislike(video._id)}
                             fill="red" size={15}
                             className="cursor-pointer"
                           />
