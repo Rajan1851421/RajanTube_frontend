@@ -44,7 +44,7 @@ export const subscribeAPIcall = createAsyncThunk(
   "subscribeAPIcall",
   async (id, { rejectWithValue }) => {
     try {
-      console.log("try",id)
+      console.log("try", id);
       const token = localStorage.getItem("L_token");
       const response = await axios.put(
         `https://rajantube-1.onrender.com/user/subscribe/${id}`,
@@ -58,14 +58,35 @@ export const subscribeAPIcall = createAsyncThunk(
       console.log("Subscribe response:", response.data);
       return response.data; // Return the response data
     } catch (error) {
-      console.log("error",id)
+      console.log("error", id);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
 
-
-
+export const UnsubscribeAPIcall = createAsyncThunk(
+  "UnsubscribeAPIcall",
+  async (id, { rejectWithValue }) => {
+    try {
+      console.log("try", id);
+      const token = localStorage.getItem("L_token");
+      const response = await axios.put(
+        `https://rajantube-1.onrender.com/user/unsubscribe/${id}`,
+        {}, // Empty body, if no data is to be sent
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        }
+      );
+      console.log("Subscribe response:", response.data);
+      return response.data; // Return the response data
+    } catch (error) {
+      console.log("error", id);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
 
 // create for ALL users
 
@@ -133,10 +154,12 @@ const videoDetailsSlice = createSlice({
     allUsers: [],
     allVideos: [],
     history: [],
+    playlist: [],
     ownerVideo: [],
     loading: false,
     error: null,
     side: false,
+    status: "",
   },
   reducers: {
     clearHistory: (state) => {
@@ -151,6 +174,7 @@ const videoDetailsSlice = createSlice({
         state.history = [...state.history, video];
       }
     },
+   
   },
   extraReducers: (builder) => {
     builder
@@ -187,6 +211,17 @@ const videoDetailsSlice = createSlice({
         state.allUsers = action.payload.Allusers || [];
       })
       .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(subscribeAPIcall.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(subscribeAPIcall.fulfilled, (state) => {
+        state.loading = false;
+        state.status = "Subcribed";
+      })
+      .addCase(subscribeAPIcall.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

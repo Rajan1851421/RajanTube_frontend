@@ -8,7 +8,8 @@ import History from '../dashboard/History'
 import MyVideos from '../dashboard/MyVideos'
 import VideoPlayer from '../dashboard/VideoPlayer'
 import Subscription from '../dashboard/Subscription'
-import Check from '../FireWorks'
+import Check from '../Check'
+import MyPlayList from '../dashboard/MyPlayList'
 
 function Router() {
   return (
@@ -18,11 +19,12 @@ function Router() {
             <Route path='/login' element={<Login/>} />
             <Route path ='/signup' element={<Signup/>}/>
             <Route path='/upload' element={<Upload/>}/>
-            <Route path = '/history' element={<History/>}/>
+            <Route path ='/history' element={<History/>}/>
             <Route path='/my-videos' element={<MyVideos/>}/>
             <Route path='/video-play/:id' element={<VideoPlayer/>}/>
             <Route path='/subcription' element={<Subscription/>}/>
-            <Route path='/check' element={<Check/>}/>
+            <Route path='/abc' element={<Check/>}/>
+            <Route path='/palylist' element={<MyPlayList/>}/>
         </Routes>
     </div>
   )

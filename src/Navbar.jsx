@@ -16,6 +16,8 @@ function Navbar() {
     const handleSignOut = () => {
         localStorage.removeItem("L_token");
         localStorage.removeItem('channelName')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('logoUrl')
         navigate('/')
         window.location.reload()
     };

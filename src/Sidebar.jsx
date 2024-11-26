@@ -54,8 +54,8 @@ function Sidebar() {
                         <LuHistory /> History
                     </Link>
                     <Link
-                        to="/history"
-                        onClick={() => handleMenuClick("History")}
+                        to="/palylist"
+                        onClick={() => handleMenuClick("Playlist")}
                         className={`flex items-center justify-start gap-3 py-2 px-4 rounded cursor-pointer ${
                             activeItem === "Playlist" ? "bg-[#646060]" : "hover:bg-[#666464]"
                         }`}
