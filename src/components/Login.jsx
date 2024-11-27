@@ -96,7 +96,7 @@ function Login() {
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
-        <Link to="/dashboard/signup" className=' w-full  flex justify-center items-center text-xs mt-1 text-white' >Create Your Account ?</Link>
+        <Link to="/signup" className=' w-full  flex justify-center items-center text-xs mt-1 text-white' >Create Your Account ?</Link>
       </form>
     </div>
   );

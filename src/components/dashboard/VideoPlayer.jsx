@@ -56,6 +56,7 @@ function VideoPlayer() {
 
 
     useEffect(() => {
+
         console.log(allVideos)
         const singleVideo = allVideos?.data?.find((video) => video._id === id);
         setSingleVide(singleVideo)
@@ -178,7 +179,7 @@ function VideoPlayer() {
 
             <div className="bg-gray-950 flex md:flex-row flex-col justify-center h-screen overflow-y-auto no-scrollbar">
                 {/* Video Player and Details Section */}
-                onPlay={() => handlePlay(singleVideo._id)}
+                
                 <div className="w-full md:w-[60%] p-4 flex flex-col h-screen overflow-y-auto no-scrollbar">
                     {singleVideo ? (
                         <>
@@ -196,24 +197,28 @@ function VideoPlayer() {
                             </h2>
                             {/* Actions Section */}
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-2 gap-2">
-                                <p className="text-gray-400">{singleVideo.category}</p>
-                                <p className='flex justify-center items-center gap-3 rounded font-bold bg-white px-2 py-1 text-gray-800'>{localStorage.getItem('channelName')} <Subscription /></p>
-                                <div className="flex flex-wrap gap-2 md:gap-4">
+                                <p className="text-gray-400">{singleVideo.category}</p>                              
 
-
-                                    <button className="rounded-2xl bg-gray-900 px-3 py-1 text-white">Join</button>
-
+                                <div className="flex flex-wrap gap-2 md:gap-2">
+                                    <button className="rounded-2xl bg-gray-900 px-3 py-1 text-white">
+                                        Join
+                                    </button>
 
                                     {
-                                        subs ? (<button onClick={() => handleUnSubscribe(singleVideo.user_id)} className="rounded-3xl bg-gray-200 px-3 py-1 text-gray-600">
-                                            Un Subscribe
-                                        </button>) : (<button onClick={() => handleSubscribe(singleVideo.user_id)} className="rounded-3xl bg-gray-200 px-3 py-1 text-gray-600">
-                                            Subscribe
-                                        </button>)
+                                        subs ? (
+                                            <button
+                                                onClick={() => handleUnSubscribe(singleVideo.user_id)}
+                                                className="rounded-3xl bg-gray-200 px-3 py-1 text-gray-600">
+                                                Un Subscribe
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleSubscribe(singleVideo.user_id)}
+                                                className="rounded-3xl bg-gray-200 px-3 py-1 text-gray-600">
+                                                Subscribe
+                                            </button>
+                                        )
                                     }
-
-
-
 
                                     <div className="bg-gray-900 flex px-3 py-2 rounded-2xl">
                                         <p className="text-gray-500 flex gap-2 items-center border-r-2 pr-3">
@@ -234,16 +239,16 @@ function VideoPlayer() {
                                             />
                                         </p>
                                     </div>
+
                                     <button className="rounded-2xl flex justify-center items-center gap-2 bg-gray-700 px-3 py-1 text-gray-200">
                                         <FaShare /> Share
                                     </button>
-                                    (
-                                    <div className="relative inline-block ">
+
+                                    <div className="relative inline-block">
                                         {/* Three-dot Icon */}
                                         <button
                                             onClick={handleToggleDialog}
-                                            className="text-gray-600 hover:text-gray-800 p-2 rounded-full"
-                                        >
+                                            className="text-gray-600 hover:text-gray-800 p-2 rounded-full">
                                             <FaEllipsisV size={20} />
                                         </button>
 
@@ -254,14 +259,18 @@ function VideoPlayer() {
                                                 onClick={handleCloseDialog}
                                             >
                                                 <ul className="p-2 space-y-2 text-sm text-gray-700">
-                                                    <li onClick={() => { addToPlaylists(singleVideo._id) }} className="hover:bg-gray-100 px-2 py-1 cursor-pointer rounded">Add to PLaylist</li>
-
+                                                    <li
+                                                        onClick={() => { addToPlaylists(singleVideo._id) }}
+                                                        className="hover:bg-gray-100 px-2 py-1 cursor-pointer rounded">
+                                                        Add to Playlist
+                                                    </li>
                                                 </ul>
                                             </div>
                                         )}
                                     </div>
                                 </div>
                             </div>
+
                             {/* Description Section */}
                             <div className="bg-gray-800 text-gray-300 p-4 rounded-md mt-4">
                                 <div className="flex flex-wrap justify-start gap-3 items-center mb-2">

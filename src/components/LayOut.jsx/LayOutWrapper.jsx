@@ -15,28 +15,35 @@ function LayOutWrapper() {
     };
 
     return (
-        <>
-            <div className="flex flex-row h-screen">
-                {/* Sidebar */}
-                {side && (
-                    <div
-                        className="  w-[80%] bg-gray-100 md:w-[20%] overflow-y-auto h-screen"
-                        // onClick={(e) => e.stopPropagation()} // Prevent closing sidebar when clicking inside it
+        <div className="flex flex-row h-screen">
+            {/* Sidebar */}
+            <div
+                className={`fixed md:static z-50 top-0 left-0 h-screen bg-black transition-transform transform ${
+                    side ? 'translate-x-0' : '-translate-x-full'
+                } md:translate-x-0 w-[80%] md:w-[20%] overflow-y-auto`}
+            >
+                {/* Close Button (visible only on mobile) */}
+                <div className="block md:hidden flex justify-end p-2">
+                    <button
+                        onClick={closeSidebar}
+                        className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
                     >
-                        <Sidebar />
-                    </div>
-                )}
-                {/* Main Area */}
-                <div
-                    className={`w-full ${side ? 'md:w-[80%]' : 'md:w-full'} h-screen overflow-y-auto no-scrollbar `}
-                    onClick={closeSidebar} // Close sidebar when clicking outside
-                >
-                    <div className='border border-gray-900 shadow-md'>
-                        <Router />
-                    </div>
+                        &times;
+                    </button>
+                </div>
+                <Sidebar />
+            </div>
+            {/* Main Area */}
+            <div
+                className={`w-full ${
+                    side ? 'md:w-[80%]' : 'md:w-full'
+                } h-screen overflow-y-auto no-scrollbar`}
+            >
+                <div className="border border-gray-900 shadow-md">
+                    <Router />
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

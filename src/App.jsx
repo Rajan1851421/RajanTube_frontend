@@ -4,8 +4,9 @@ import Navbar from './Navbar.jsx';
 import LayOutWrapper from './components/LayOut.jsx/LayOutWrapper.jsx';
 
 
-function App() {
 
+function App() {
+  
 
   return (
     <div>

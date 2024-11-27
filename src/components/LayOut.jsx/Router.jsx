@@ -10,8 +10,11 @@ import VideoPlayer from '../dashboard/VideoPlayer'
 import Subscription from '../dashboard/Subscription'
 import Check from '../Check'
 import MyPlayList from '../dashboard/MyPlayList'
+import Search from '../dashboard/Search'
+
 
 function Router() {
+  
   return (
     <div>
         <Routes>
@@ -25,6 +28,7 @@ function Router() {
             <Route path='/subcription' element={<Subscription/>}/>
             <Route path='/abc' element={<Check/>}/>
             <Route path='/palylist' element={<MyPlayList/>}/>
+            <Route path='/search' element={<Search/>}/>
         </Routes>
     </div>
   )
