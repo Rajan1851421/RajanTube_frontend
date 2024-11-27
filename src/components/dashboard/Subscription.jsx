@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../../features/rajanTubeSlice';
+import { getAllCommentAPI, getAllUsers } from '../../features/rajanTubeSlice';
+import { getAdapter } from 'axios';
 
 
-function Check() {
+function Subscription() {
   const { allUsers } = useSelector((state) => state.rajanTube);
   const dispatch = useDispatch();
   const [totalsub,setTotalSubs] = useState(null)
 
   useEffect(() => {
    dispatch(getAllUsers())
+  
   }, [dispatch]);
 
   useEffect(() => {
@@ -36,4 +38,4 @@ function Check() {
   </>;
 }
 
-export default Check;
+export default Subscription;

@@ -17,6 +17,7 @@ import moment from "moment";
 import Subscription from './Subscription'
 import { FaEllipsisV } from 'react-icons/fa';
 import Confetti from "react-confetti";
+import AddComment from './AddComment';
 
 
 
@@ -179,7 +180,7 @@ function VideoPlayer() {
 
             <div className="bg-gray-950 flex md:flex-row flex-col justify-center h-screen overflow-y-auto no-scrollbar">
                 {/* Video Player and Details Section */}
-                
+
                 <div className="w-full md:w-[60%] p-4 flex flex-col h-screen overflow-y-auto no-scrollbar">
                     {singleVideo ? (
                         <>
@@ -197,7 +198,7 @@ function VideoPlayer() {
                             </h2>
                             {/* Actions Section */}
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-2 gap-2">
-                                <p className="text-gray-400">{singleVideo.category}</p>                              
+                                <p className="text-gray-400">{singleVideo.category}</p>
 
                                 <div className="flex flex-wrap gap-2 md:gap-2">
                                     <button className="rounded-2xl bg-gray-900 px-3 py-1 text-white">
@@ -272,6 +273,9 @@ function VideoPlayer() {
                             </div>
 
                             {/* Description Section */}
+                            <div className='my-1'>
+                                <AddComment />
+                            </div>
                             <div className="bg-gray-800 text-gray-300 p-4 rounded-md mt-4">
                                 <div className="flex flex-wrap justify-start gap-3 items-center mb-2">
                                     <span className="text-sm">Views: {singleVideo.views}</span>

@@ -11,6 +11,7 @@ import Subscription from '../dashboard/Subscription'
 import Check from '../Check'
 import MyPlayList from '../dashboard/MyPlayList'
 import Search from '../dashboard/Search'
+import SubscribedByMe from '../dashboard/SubsribedByMe'
 
 
 function Router() {
@@ -29,6 +30,7 @@ function Router() {
             <Route path='/abc' element={<Check/>}/>
             <Route path='/palylist' element={<MyPlayList/>}/>
             <Route path='/search' element={<Search/>}/>
+        
         </Routes>
     </div>
   )

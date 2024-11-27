@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+
 function UpdateVideo({ videoId, closeModal }) {
     const [videoDetails, setVideoDetails] = useState(null);
     const [title, setTitle] = useState('');
@@ -10,6 +11,9 @@ function UpdateVideo({ videoId, closeModal }) {
     const [tags, setTags] = useState('');
     const [thumbnailUrl, setThumbnail] = useState(null)
     const [loading, setLoading] = useState(false);
+
+
+
 
     useEffect(() => {
         // Fetch the video details to pre-fill the form
@@ -54,9 +58,8 @@ function UpdateVideo({ videoId, closeModal }) {
             );
             console.log("Video Updated:", updatedVideo);
             toast.success('Video updated successfully');
-            closeModal(); // Close modal after update
+            closeModal();
         } catch (err) {
-            // Log the error response from server
             console.error("Error response:", err.response);
             toast.error('Failed to update video');
         } finally {

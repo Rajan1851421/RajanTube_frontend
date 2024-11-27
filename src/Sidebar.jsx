@@ -8,6 +8,7 @@ import { CgPlayList } from "react-icons/cg";
 import { BiLike } from "react-icons/bi";
 import { useDispatch } from 'react-redux';
 import { handleSidebar } from './features/SidebarSlice';
+import SubscribedByMe from './components/dashboard/SubsribedByMe';
 
 
 
@@ -88,6 +89,8 @@ function Sidebar() {
                     >
                         Subscription
                     </Link>
+                    <div className='border-b border-gray-900 w-full '></div>
+                    <SubscribedByMe/>
                 </div>
             </div>
         </div>

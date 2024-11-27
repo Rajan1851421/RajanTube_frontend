@@ -148,6 +148,44 @@ export const deleteVideo = createAsyncThunk(
   }
 );
 
+// get all comments by usier id
+export const getAllCommentAPI = createAsyncThunk(
+  "getAllCommentAPI",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`https://rajantube-1.onrender.com/comment/${id}`);
+      console.log("My all response", response);
+      return response.data; 
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+
+export const addCommentAPI = createAsyncThunk(
+  "addCommentAPI",
+  async ({ id, commentText }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("L_token");
+      const response = await axios.post(
+        `https://rajantube-1.onrender.com/comment/new-comment/${id}`,
+        { commentText }, // Body of the request
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        }
+      );
+      console.log("comment", response);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+
 const videoDetailsSlice = createSlice({
   name: "videoDetails",
   initialState: {
@@ -160,6 +198,7 @@ const videoDetailsSlice = createSlice({
     error: null,
     side: false,
     status: "",
+    allComment:[]
   },
   reducers: {
     clearHistory: (state) => {
@@ -224,7 +263,19 @@ const videoDetailsSlice = createSlice({
       .addCase(subscribeAPIcall.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(getAllCommentAPI.pending,(state,action)=>{
+        state.loading= true;
+        
+      })
+      .addCase(getAllCommentAPI.fulfilled,(state,action)=>{
+        state.loading= false;
+        state.allComment = action.payload;
+      })
+      .addCase(getAllCommentAPI.rejected,(state,action)=>{
+        state.loading= false;
+        state.error = action.payload;
+      })
   },
 });
 
