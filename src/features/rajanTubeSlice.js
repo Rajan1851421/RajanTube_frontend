@@ -153,15 +153,16 @@ export const getAllCommentAPI = createAsyncThunk(
   "getAllCommentAPI",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`https://rajantube-1.onrender.com/comment/${id}`);
+      const response = await axios.get(
+        `https://rajantube-1.onrender.com/comment/${id}`
+      );
       console.log("My all response", response);
-      return response.data; 
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
-
 
 export const addCommentAPI = createAsyncThunk(
   "addCommentAPI",
@@ -177,7 +178,7 @@ export const addCommentAPI = createAsyncThunk(
           },
         }
       );
-      console.log("comment", response);
+      // console.log("comment", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -185,6 +186,34 @@ export const addCommentAPI = createAsyncThunk(
   }
 );
 
+// Action to update comment by ID
+export const commentUpdateByCmtid =
+  ({ id, formData }) =>
+  async (dispatch) => {
+    try {
+      const token = localStorage.getItem("L_token");
+      const response = await axios.put(
+        `https://rajantube-1.onrender.com/comment/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch({
+        type: "rajanTube/updateComment",
+        payload: response.data, // Update the comment in the state
+      });
+      console.log("update comment",response)
+      return response.data;
+    } catch (error) {
+      console.error("Error updating comment:", error);
+      throw error;
+    }
+  };
 
 const videoDetailsSlice = createSlice({
   name: "videoDetails",
@@ -198,7 +227,7 @@ const videoDetailsSlice = createSlice({
     error: null,
     side: false,
     status: "",
-    allComment:[]
+    allComment: [],
   },
   reducers: {
     clearHistory: (state) => {
@@ -213,7 +242,6 @@ const videoDetailsSlice = createSlice({
         state.history = [...state.history, video];
       }
     },
-   
   },
   extraReducers: (builder) => {
     builder
@@ -264,18 +292,17 @@ const videoDetailsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getAllCommentAPI.pending,(state,action)=>{
-        state.loading= true;
-        
+      .addCase(getAllCommentAPI.pending, (state, action) => {
+        state.loading = true;
       })
-      .addCase(getAllCommentAPI.fulfilled,(state,action)=>{
-        state.loading= false;
+      .addCase(getAllCommentAPI.fulfilled, (state, action) => {
+        state.loading = false;
         state.allComment = action.payload;
       })
-      .addCase(getAllCommentAPI.rejected,(state,action)=>{
-        state.loading= false;
+      .addCase(getAllCommentAPI.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 
