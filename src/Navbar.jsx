@@ -3,6 +3,8 @@ import { FaYoutube, FaMicrophone } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { handleSidebar } from "./features/SidebarSlice";
+import { RiLiveFill } from "react-icons/ri";
+
 
 
 function Navbar() {
@@ -54,6 +56,9 @@ function Navbar() {
                         <FaMicrophone className="mx-2" />
                     </button>
                     <div className="flex gap-2 justify-end items-center w-[25%]">
+                        <button className="text-3xl text-white flex justify-center items-center gap-2 p-1  ">
+                            <RiLiveFill className="mx-2" />
+                        </button>
                         {localStorage.getItem("L_token") ? (
                             <Link
                                 onClick={handleSignOut}

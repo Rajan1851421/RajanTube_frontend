@@ -1,38 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../features/rajanTubeSlice';
+import { getAllCommentAPI, getAllUsers, publiccomments } from '../features/rajanTubeSlice';
 
 function Check() {
-  const { allUsers } = useSelector((state) => state.rajanTube);
-  const [subsLogo, setSubsLogo] = useState([]);
   const dispatch = useDispatch();
 
+  const { allComment, publicComments, allUsers } = useSelector((state) => state.rajanTube);
+  
   useEffect(() => {
+    dispatch(publiccomments());
+    dispatch(getAllCommentAPI(localStorage.getItem('userId')));
     dispatch(getAllUsers());
   }, [dispatch]);
+  
+  // The video ID to match against userId
+  const videosId = "673d9e62aadf31594426aa3a";
+  // const videosId = "673d9e62aadf31594426aa3a";
 
-  useEffect(() => {
-    const subscribedUsers = allUsers.filter((user) =>
-      user.subcribedChannels.includes(localStorage.getItem('userId'))
-    );
+  // Filter the publicComments where the userId matches the videosId
+  const matchedComments = publicComments.message
+    ? publicComments.message.filter((comment) => comment.userId === videosId)
+    : [];
 
-    console.log("Subscribed Users:", subscribedUsers);
-
-    const logoUrls = subscribedUsers.map((user) => user.logoUrl);
-    setSubsLogo(logoUrls);
-    console.log("Logo URLs:", logoUrls);
-  }, [allUsers]);
+  console.log("Matched Comments:", matchedComments);
 
   return (
     <div>
-      <h1>Subscribed Users Logos</h1>
-      <ul>
-        {subsLogo.map((logo, index) => (
-          <li key={index}>
-            <img src={logo} alt={`Logo ${index + 1}`} style={{ width: "100px", height: "100px" }} />
-          </li>
-        ))}
-      </ul>
+      <h1>Check</h1>
+      <div>
+        {/* Render the matched comments */}
+        {matchedComments.length > 0 ? (
+          matchedComments.map((comment, index) => (
+            <div key={index}>
+              <p>{comment.commentText}</p>
+              <p>User ID: {comment.userId}</p>
+            </div>
+          ))
+        ) : (
+          <p>No matching comments available</p>
+        )}
+      </div>
     </div>
   );
 }

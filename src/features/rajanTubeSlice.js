@@ -31,7 +31,7 @@ export const viewAPIcall = createAsyncThunk(
           },
         }
       );
-      // console.log("view res:",response)
+      //  //  console.log("view res:",response)
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -44,7 +44,7 @@ export const subscribeAPIcall = createAsyncThunk(
   "subscribeAPIcall",
   async (id, { rejectWithValue }) => {
     try {
-      console.log("try", id);
+       //  console.log("try", id);
       const token = localStorage.getItem("L_token");
       const response = await axios.put(
         `https://rajantube-1.onrender.com/user/subscribe/${id}`,
@@ -55,10 +55,10 @@ export const subscribeAPIcall = createAsyncThunk(
           },
         }
       );
-      console.log("Subscribe response:", response.data);
+       //  console.log("Subscribe response:", response.data);
       return response.data; // Return the response data
     } catch (error) {
-      console.log("error", id);
+       //  console.log("error", id);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -68,7 +68,7 @@ export const UnsubscribeAPIcall = createAsyncThunk(
   "UnsubscribeAPIcall",
   async (id, { rejectWithValue }) => {
     try {
-      console.log("try", id);
+      //  //  console.log("try", id);
       const token = localStorage.getItem("L_token");
       const response = await axios.put(
         `https://rajantube-1.onrender.com/user/unsubscribe/${id}`,
@@ -79,10 +79,10 @@ export const UnsubscribeAPIcall = createAsyncThunk(
           },
         }
       );
-      console.log("Subscribe response:", response.data);
+      //  //  console.log("Subscribe response:", response.data);
       return response.data; // Return the response data
     } catch (error) {
-      console.log("error", id);
+       //  console.log("error", id);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -109,7 +109,7 @@ export const ownAllVideos = createAsyncThunk(
   async (_, { rejectWithValue, getState }) => {
     try {
       const token = localStorage.getItem("L_token");
-      console.log(token);
+      //  //  console.log(token);
       const response = await axios.get(
         `https://rajantube-1.onrender.com/video/own-video`,
         {
@@ -118,7 +118,7 @@ export const ownAllVideos = createAsyncThunk(
           },
         }
       );
-      console.log("My", response);
+      //  //  console.log("My", response);
       return response.data; // Returning data as-is
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -140,7 +140,7 @@ export const deleteVideo = createAsyncThunk(
           },
         }
       );
-      console.log("My", response);
+      //  //  console.log("My", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -156,7 +156,7 @@ export const getAllCommentAPI = createAsyncThunk(
       const response = await axios.get(
         `https://rajantube-1.onrender.com/comment/${id}`
       );
-      console.log("My all response", response);
+      //  //  console.log("My all response", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -178,13 +178,44 @@ export const addCommentAPI = createAsyncThunk(
           },
         }
       );
-      // console.log("comment", response);
+      //  //  console.log("comment", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
+
+
+// likes Video
+
+
+
+
+
+
+
+// get all comment for public view
+
+
+
+
+
+export const publiccomments = createAsyncThunk(
+  "publiccomments",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `https://rajantube-1.onrender.com/comment`
+      );
+        console.log("My all public", response);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
 
 // Action to update comment by ID
 export const commentUpdateByCmtid =
@@ -207,17 +238,39 @@ export const commentUpdateByCmtid =
         type: "rajanTube/updateComment",
         payload: response.data, // Update the comment in the state
       });
-      console.log("update comment",response)
+       //  console.log("update comment",response)
       return response.data;
     } catch (error) {
-      console.error("Error updating comment:", error);
+       //  console.error("Error updating comment:", error);
       throw error;
     }
   };
 
+  export const deleteComment = createAsyncThunk(
+    "deleteComment",
+    async (id, { rejectWithValue }) => {
+      try {
+        const token = localStorage.getItem("L_token");
+        const response = await axios.delete(
+          `https://rajantube-1.onrender.com/comment/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+            },
+          }
+        );
+          console.log("My delete", response);
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data?.message || error.message);
+      }
+    }
+  );
+
 const videoDetailsSlice = createSlice({
   name: "videoDetails",
   initialState: {
+    publicComments:[],
     allUsers: [],
     allVideos: [],
     history: [],
@@ -235,7 +288,7 @@ const videoDetailsSlice = createSlice({
     },
     addToHistory: (state, action) => {
       const video = action.payload;
-      console.log(video);
+       //  console.log(video);
       const videoExists = state.history.some((item) => item == video);
 
       if (!videoExists) {
@@ -302,7 +355,18 @@ const videoDetailsSlice = createSlice({
       .addCase(getAllCommentAPI.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(publiccomments.pending,(state,action)=>{
+        state.loading = true;
+      })
+      .addCase(publiccomments.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.publicComments = action.payload;
+      })
+      .addCase(publiccomments.rejected,(state,action)=>{
+        state.loading = false
+        state.error = action.payload;
+      })
   },
 });
 
