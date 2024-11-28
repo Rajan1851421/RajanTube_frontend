@@ -30,7 +30,7 @@ function SubscribedByMe() {
             user.subcribedChannels?.includes(currentUserId)
         );
 
-        console.log('Subscribed Users:', subscribedUsers);
+        // console.log('Subscribed Users:', subscribedUsers);
 
         // Extract channel details for subscribed users
         const channels = subscribedUsers.map((user) => ({
@@ -41,7 +41,7 @@ function SubscribedByMe() {
         }));
 
         setSubscribedChannels(channels);
-        console.log('Subscribed Channels:', channels);
+        // console.log('Subscribed Channels:', channels);
     };
 
     return (

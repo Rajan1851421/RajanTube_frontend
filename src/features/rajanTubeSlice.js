@@ -189,6 +189,49 @@ export const addCommentAPI = createAsyncThunk(
 
 // likes Video
 
+export const likeVideoApi = createAsyncThunk(
+  'videos/likeVideo',
+  async (id, { getState }) => {
+    const token = localStorage.getItem('L_token'); // Use token for authorization
+    const response = await axios.put(
+      `https://rajantube-1.onrender.com/video/like/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token if required
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log(response.data)
+    return response.data;
+  }
+);
+// dislike api  
+export const dislikeVideoApi = createAsyncThunk(
+  "dislikeVideoApi",
+  async (id, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("L_token");
+      const response = await axios.put(
+        `https://rajantube-1.onrender.com/video/dislike/${id}`,
+        {}, // Empty body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Token in Authorization header
+          },
+        }
+      );
+      console.log("like response", response.data);
+      return { id, ...response.data }; // Return video ID and response
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
+  }
+);
+
 
 
 
@@ -208,7 +251,7 @@ export const publiccomments = createAsyncThunk(
       const response = await axios.get(
         `https://rajantube-1.onrender.com/comment`
       );
-        console.log("My all public", response);
+        // console.log("My all public", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -279,10 +322,13 @@ const videoDetailsSlice = createSlice({
     loading: false,
     error: null,
     side: false,
-    status: "",
+    status: null,
     allComment: [],
   },
   reducers: {
+    setStatus: (state, action) => {
+      state.status = action.payload; 
+    },
     clearHistory: (state) => {
       state.history = [];
     },
@@ -367,8 +413,35 @@ const videoDetailsSlice = createSlice({
         state.loading = false
         state.error = action.payload;
       })
+      .addCase(likeVideoApi.pending,(state,action)=>{
+        state.loading = true;
+        state.status=" "
+      })
+      .addCase(likeVideoApi.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.status = action.payload.message;
+        
+      })
+      .addCase(likeVideoApi.rejected,(state,action)=>{
+        state.loading = false
+        state.error = action.payload;
+      })
+      .addCase(dislikeVideoApi.pending,(state,action)=>{
+        state.loading = true;
+        state.status=" "
+      })
+      .addCase(dislikeVideoApi.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.status = action.payload.message;
+       
+      })
+      .addCase(dislikeVideoApi.rejected,(state,action)=>{
+        state.loading = false
+        state.error = action.payload;
+      })
+
   },
 });
 
-export const { clearHistory, addToHistory } = videoDetailsSlice.actions; // Export actions
+export const { clearHistory, addToHistory,setStatus  } = videoDetailsSlice.actions; // Export actions
 export default videoDetailsSlice.reducer; // Export reducer

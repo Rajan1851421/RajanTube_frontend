@@ -19,14 +19,14 @@ function Subscription() {
       user.subcribedChannels.includes(localStorage.getItem('userId'))
     );
 
-    console.log("Subscribed Users:", subscribedUsers);
-    console.log("Logged-in User ID:", localStorage.getItem('userId'));
+    // console.log("Subscribed Users:", subscribedUsers);
+    // console.log("Logged-in User ID:", localStorage.getItem('userId'));
 
     if (subscribedUsers.length > 0) {
-      console.log("Number of subscribers:", subscribedUsers.length);
+      // console.log("Number of subscribers:", subscribedUsers.length);
       setTotalSubs(subscribedUsers.length)
     } else {
-      console.log("No subscribers found.");
+      // console.log("No subscribers found.");
     }
   }, [allUsers]);
 

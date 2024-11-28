@@ -7,7 +7,10 @@ import {
     viewAPIcall,
     getAllVideos,
     subscribeAPIcall,
-    UnsubscribeAPIcall
+    UnsubscribeAPIcall,
+    likeVideoApi,
+    dislikeVideoApi,
+    setStatus
 } from '../../features/rajanTubeSlice';
 import { addToPlaylist } from '../../features/playListSlice';
 import { FaThumbsUp, FaThumbsDown, FaShare } from "react-icons/fa";
@@ -43,10 +46,10 @@ function VideoPlayer() {
     };
     const addToPlaylists = (id) => {
         const playListVideo = allVideos?.data?.find((video) => video._id === id);
-        console.log(id)
-        console.log(playListVideo)
+        // console.log(id)
+        // console.log(playListVideo)
         if (playListVideo) {
-            console.log("Adding to playlist:", playListVideo);
+            // console.log("Adding to playlist:", playListVideo);
             dispatch(addToPlaylist(playListVideo))
         } else {
             console.error("Video not found");
@@ -57,7 +60,7 @@ function VideoPlayer() {
 
 
     useEffect(() => {
-
+        dispatch(setStatus(''))
         console.log(allVideos)
         const singleVideo = allVideos?.data?.find((video) => video._id === id);
         setSingleVide(singleVideo)
@@ -74,51 +77,33 @@ function VideoPlayer() {
 
     const handleLike = (id) => {
         if (!localStorage.getItem('L_token')) {
-            alert("please login")
-        }
-        setLiked('');
-        axios
-            .put(
-                `https://rajantube-1.onrender.com/video/like/${id}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('L_token')}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
-            .then((response) => {
-                setLiked(response.data.message);
-                toast.success(response.data.message);
-            })
-            .catch((error) => {
-                console.error("Error liking video:", error);
-            });
+            alert("please login")        }      
+        axios.put(`https://rajantube-1.onrender.com/video/like/${id}`)
+        .then(response=>{
+            console.log(response)
+            // toast.success(response.data.message)
+            dispatch(getAllVideos)
+        })
+        .catch(error=>{
+            toast.error("you are Already Liked ")
+        })
+
     };
 
     const handledisLike = (id) => {
         if (!localStorage.getItem('L_token')) {
             alert("please login")
-        }
-        axios
-            .put(
-                `https://rajantube-1.onrender.com/video/dislike/${id}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('L_token')}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
-            .then((response) => {
-                setLiked(response.data.message);
-                toast.success(response.data.message);
-            })
-            .catch((error) => {
-                console.error("Error disliking video:", error);
-            });
+        }        
+        axios.put(`https://rajantube-1.onrender.com/video/dislike/${id}`)
+        .then(response=>{
+            // console.log(response)
+            toast.success(response.data.message)
+            dispatch(getAllVideos)
+        })
+        .catch(error=>{
+            toast.error("you are Already dis like ")
+        })
+        
     };
 
     const handlePlay = (id) => {
@@ -130,7 +115,7 @@ function VideoPlayer() {
     const handlePlayVideo = (id) => {
         const clickedVideo = allVideos?.data?.find((video) => video._id === id);
         if (clickedVideo) {
-            setSingleVide(clickedVideo); // Update the current video
+            setSingleVide(clickedVideo); 
             setTimeout(() => {
                 dispatch(viewAPIcall(id))
             }, 5000)
@@ -157,20 +142,14 @@ function VideoPlayer() {
 
         console.log("Subscribe:", id)
     }
-    const handleUnSubscribe = (id) => {
-        // console.log("UnSubscribe:", id); 
-        // console.log("Alluser:", allUsers);    
+    const handleUnSubscribe = (id) => {          
         const matchedUser = allUsers.find((user) => user._id === id);
-
-        if (matchedUser) {
-            // console.log("Matched User:", matchedUser);
+        if (matchedUser) {           
             setSubs(true)
             window.location.reload()
         } else {
             console.log("User not found!");
-        }
-
-        // Perform additional actions, e.g., updating the state or calling an API
+        }        
     };
 
 
