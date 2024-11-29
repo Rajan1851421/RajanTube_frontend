@@ -8,9 +8,7 @@ import {
     getAllVideos,
     subscribeAPIcall,
     UnsubscribeAPIcall,
-    likeVideoApi,
-    dislikeVideoApi,
-    setStatus
+
 } from '../../features/rajanTubeSlice';
 import { addToPlaylist } from '../../features/playListSlice';
 import { FaThumbsUp, FaThumbsDown, FaShare } from "react-icons/fa";
@@ -21,6 +19,7 @@ import Subscription from './Subscription'
 import { FaEllipsisV } from 'react-icons/fa';
 import Confetti from "react-confetti";
 import AddComment from './AddComment';
+import ToogelText from './ToogelText';
 
 
 
@@ -29,7 +28,6 @@ function VideoPlayer() {
     const { allVideos, allUsers, loading, status } = useSelector((state) => state.rajanTube);
     const [singleVideo, setSingleVide] = useState([])
     const dispatch = useDispatch();
-    const [liked, setLiked] = useState('');
     const [subsLogo, setSubsLogo] = useState([]);
     const [subs, setSubs] = useState(false)
     const [isConfettiActive, setIsConfettiActive] = useState(false);
@@ -40,16 +38,12 @@ function VideoPlayer() {
     const handleToggleDialog = () => {
         setIsDialogOpen(!isDialogOpen);
     };
-
     const handleCloseDialog = () => {
         setIsDialogOpen(false);
     };
     const addToPlaylists = (id) => {
         const playListVideo = allVideos?.data?.find((video) => video._id === id);
-        // console.log(id)
-        // console.log(playListVideo)
         if (playListVideo) {
-            // console.log("Adding to playlist:", playListVideo);
             dispatch(addToPlaylist(playListVideo))
         } else {
             console.error("Video not found");
@@ -60,8 +54,6 @@ function VideoPlayer() {
 
 
     useEffect(() => {
-        dispatch(setStatus(''))
-        console.log(allVideos)
         const singleVideo = allVideos?.data?.find((video) => video._id === id);
         setSingleVide(singleVideo)
         dispatch(getAllUsers());
@@ -72,38 +64,51 @@ function VideoPlayer() {
         const logoUrls = subscribedUsers.map((user) => user);
         setSubsLogo(logoUrls);
 
-    }, [dispatch, liked]);
+    }, [dispatch, allVideos]);
+
+
 
 
     const handleLike = (id) => {
         if (!localStorage.getItem('L_token')) {
-            alert("please login")        }      
-        axios.put(`https://rajantube-1.onrender.com/video/like/${id}`)
-        .then(response=>{
-            console.log(response)
-            // toast.success(response.data.message)
-            dispatch(getAllVideos)
+            alert("please login")
+        }
+        axios.put(`https://rajantube-1.onrender.com/video/like/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('L_token')}` // Include the token in the Authorization header
+            }
         })
-        .catch(error=>{
-            toast.error("you are Already Liked ")
-        })
+            .then(response => {
+                console.log(response);
+                toast.success(response.data.message);
+                dispatch(getAllVideos());
+            })
+            .catch(error => {
+                handledisLike(id)
+                dispatch(getAllVideos());
+
+            });
 
     };
 
     const handledisLike = (id) => {
         if (!localStorage.getItem('L_token')) {
             alert("please login")
-        }        
-        axios.put(`https://rajantube-1.onrender.com/video/dislike/${id}`)
-        .then(response=>{
-            // console.log(response)
-            toast.success(response.data.message)
-            dispatch(getAllVideos)
+        }
+        axios.put(`https://rajantube-1.onrender.com/video/dislike/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('L_token')}` // Include the token in the Authorization header
+            }
         })
-        .catch(error=>{
-            toast.error("you are Already dis like ")
-        })
-        
+            .then(response => {
+                console.log(response);
+                toast.success(response.data.message);
+                dispatch(getAllVideos());
+            })
+            .catch(error => {
+                handleLike(id)
+            });
+
     };
 
     const handlePlay = (id) => {
@@ -115,7 +120,7 @@ function VideoPlayer() {
     const handlePlayVideo = (id) => {
         const clickedVideo = allVideos?.data?.find((video) => video._id === id);
         if (clickedVideo) {
-            setSingleVide(clickedVideo); 
+            setSingleVide(clickedVideo);
             setTimeout(() => {
                 dispatch(viewAPIcall(id))
             }, 5000)
@@ -126,30 +131,42 @@ function VideoPlayer() {
     const handleSubscribe = (id) => {
         if (!localStorage.getItem('L_token')) {
             alert("please login")
+            console.log("Subscribe:", id)
         }
+        axios.put(`https://rajantube-1.onrender.com/user/subscribe/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('L_token')}` // Include the token in the Authorization header
+            }
+        })
+            .then(response => {
+                console.log(response);
+                toast.success(response.data.message);
+                dispatch(getAllVideos());
+            })
+            .catch(error => {
+                // handleUnSubscribe(id)
+            });
 
-        dispatch(subscribeAPIcall(id))
-        if (typeof status === "string" && status.trim() !== "") {
-            setIsConfettiActive(true);
-            dispatch(getAllVideos)
-            dispatch(getAllUsers)
-            setTimeout(() => {
-                setIsConfettiActive(false);
-            }, 5000);
 
-        }
-
-
-        console.log("Subscribe:", id)
     }
-    const handleUnSubscribe = (id) => {          
-        const matchedUser = allUsers.find((user) => user._id === id);
-        if (matchedUser) {           
-            setSubs(true)
-            window.location.reload()
-        } else {
-            console.log("User not found!");
-        }        
+    const handleUnSubscribe = (id) => {
+        if (!localStorage.getItem('L_token')) {
+            alert("please login")
+            console.log("Subscribe:", id)
+        }
+        axios.put(`https://rajantube-1.onrender.com/user/unsubscribe/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('L_token')}` // Include the token in the Authorization header
+            }
+        })
+            .then(response => {
+                console.log(response);
+                toast.success(response.data.message);
+                dispatch(getAllVideos());
+            })
+            .catch(error => {
+                // handleSubscribe(id)
+            });
     };
 
 
@@ -183,8 +200,18 @@ function VideoPlayer() {
                                     <button className="rounded-2xl bg-gray-900 px-3 py-1 text-white">
                                         Join
                                     </button>
-
-                                    {
+                                    <button
+                                        onClick={() => handleUnSubscribe(singleVideo.user_id)}
+                                        className="rounded-3xl bg-gray-200 px-3 py-1 text-gray-600">
+                                        Un Subscribe
+                                    </button>
+                                    {/* <ToogelText /> */}
+                                    <button
+                                        onClick={() => handleSubscribe(singleVideo.user_id)}
+                                        className="rounded-3xl bg-gray-200 px-3 py-1 text-gray-600">
+                                        Subscribe
+                                    </button>
+                                    {/* {
                                         subs ? (
                                             <button
                                                 onClick={() => handleUnSubscribe(singleVideo.user_id)}
@@ -198,7 +225,7 @@ function VideoPlayer() {
                                                 Subscribe
                                             </button>
                                         )
-                                    }
+                                    } */}
 
                                     <div className="bg-gray-900 flex px-3 py-2 rounded-2xl">
                                         <p className="text-gray-500 flex gap-2 items-center border-r-2 pr-3">

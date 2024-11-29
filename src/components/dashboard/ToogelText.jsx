@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../features/rajanTubeSlice';
+import { getAllUsers } from '../../features/rajanTubeSlice';
 
 function ToggleText() {
   const dispatch =useDispatch()
@@ -18,10 +18,7 @@ function ToggleText() {
         const currentUserId = localStorage.getItem('userId') 
         const isSubscribed = allUsers.some((user) =>
             user.subcribedBy?.includes(currentUserId)
-        );
-        // console.log('Is Subscribed:', isSubscribed);
-
-        // Update the state only if the value of `text` changes
+        );       
         setText((prevText) =>
             isSubscribed ? (prevText !== 'Unsubscribe' ? 'Unsubscribe' : prevText) : (prevText !== 'Subscribe' ? 'Subscribe' : prevText)
         );

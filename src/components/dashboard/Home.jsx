@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllVideos, getAllUsers } from "../../features/rajanTubeSlice";
-import { Vortex } from "react-loader-spinner";
+import { BallTriangle } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";;
 import Confetti from "react-confetti";
 
@@ -58,14 +58,15 @@ function Home() {
       {isConfettiActive && <Confetti />}
       {loading ? (
         <div className="flex justify-center items-center h-full absolute inset-0 bg-opacity-50 bg-black text-white text-2xl">
-          <Vortex
-            visible={true}
-            height="80"
-            width="80"
-            ariaLabel="vortex-loading"
+          <BallTriangle
+            height={100}
+            width={100}
+            radius={5}
+            color="#4fa94d"
+            ariaLabel="ball-triangle-loading"
             wrapperStyle={{}}
-            wrapperClass="vortex-wrapper"
-            colors={["red", "green", "blue", "yellow", "orange", "purple"]}
+            wrapperClass=""
+            visible={true}
           />
         </div>
       ) : (
