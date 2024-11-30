@@ -33,7 +33,8 @@ function VideoPlayer() {
     const [isConfettiActive, setIsConfettiActive] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-
+   
+   
 
     const handleToggleDialog = () => {
         setIsDialogOpen(!isDialogOpen);
@@ -55,18 +56,14 @@ function VideoPlayer() {
 
     useEffect(() => {
         const singleVideo = allVideos?.data?.find((video) => video._id === id);
-        setSingleVide(singleVideo)
-        dispatch(getAllUsers());
-        dispatch(getAllVideos())
+        setSingleVide(singleVideo)       
         const subscribedUsers = allUsers.filter((user) =>
             user.subcribedChannels.includes(localStorage.getItem('userId'))
         );
         const logoUrls = subscribedUsers.map((user) => user);
         setSubsLogo(logoUrls);
 
-    }, [dispatch, allVideos]);
-
-
+    }, [dispatch]);
 
 
     const handleLike = (id) => {
@@ -82,6 +79,7 @@ function VideoPlayer() {
                 console.log(response);
                 toast.success(response.data.message);
                 dispatch(getAllVideos());
+                
             })
             .catch(error => {
                 handledisLike(id)

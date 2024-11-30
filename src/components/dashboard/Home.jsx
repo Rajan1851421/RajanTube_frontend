@@ -13,7 +13,7 @@ function Home() {
   const [videoDurations, setVideoDurations] = useState({});
   const [filteredVideos, setFilteredVideos] = useState([]);
   const dispatch = useDispatch();
-  const { allVideos, loading } = useSelector((state) => state.rajanTube);
+  const { allVideos, loading,allUsers } = useSelector((state) => state.rajanTube);
   const navigate = useNavigate();
 
   const searchList = [
@@ -30,10 +30,11 @@ function Home() {
     dispatch(getAllVideos()).then((res) => {
       if (res.payload?.data) {
         setFilteredVideos(res.payload.data);
+        dispatch(getAllUsers());
       }
     });
-    dispatch(getAllUsers());
-  }, [dispatch]);
+    
+  }, [allVideos,allUsers]);
 
   const handleVideoClick = (id) => {
     navigate(`/video-play/${id}`);

@@ -11,7 +11,7 @@ function Subscription() {
 
   useEffect(() => {
    dispatch(getAllUsers())  
-  }, [dispatch,allUsers]);
+  }, []);
 
   useEffect(() => {
     const subscribedUsers = allUsers.filter((user) =>
@@ -23,7 +23,7 @@ function Subscription() {
     } else {
       
     }
-  }, [allUsers]);
+  }, []);
 
   return <>
     <>
