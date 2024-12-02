@@ -34,7 +34,7 @@ function Home() {
       }
     });
     
-  }, [allVideos,allUsers]);
+  }, []);
 
   const handleVideoClick = (id) => {
     navigate(`/video-play/${id}`);
